@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TaTeTi</string>
+    <string name="opcion_jugador">Elige jugar con:</string>
+    <string name="circulo">Circulo (O)</string>
+    <string name="cruz">Cruz (X)</string>
 </resources>
