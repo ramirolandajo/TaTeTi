@@ -1,7 +1,7 @@
 package com.desarrolloApps.tateti;
 
 public class TaTeTi {
-    private char[][] tablero = new char[3][3];
+    private final Character[][] tablero = new Character[3][3];
     private char turno;
 
     //Constructor
@@ -24,32 +24,49 @@ public class TaTeTi {
         return this.turno;
     }
 
-    public void setCasillero(int fila, int columna, char valor){
+    public void marcarCasillero(int fila, int columna, char turnoActual){
         //marcar una posicion del tabelro
-        this.tablero[fila][columna] = valor;
+        this.tablero[fila][columna] = turnoActual;
+        cambiarTurno();
     }
 
-    public void setTurno(char jugador){
-        this.turno = jugador;
-    }
     //Metodos de la clase
 
+    public void cambiarTurno(){
+
+        if (this.turno == 'X') {
+            this.turno = 'O';
+        }else if (this.turno == 'O'){
+            this.turno = 'X';
+        }
+    }
+
+    public void  moverComputadora(){
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (getCasillero(i,j) != ' '){
+                    marcarCasillero(i,j,turno);
+                }
+            }
+        }
+    }
+
     //Este metodo va a llamar a los 3 metodos que verifican horizontal, vertical y diagonal
-    public boolean chequearGanador(int fila,int columna,char valor){
+    public Character chequearGanador(){
 
         //Si alguno da true este metodo devuelve true. Si no false
 
-        if (verificarDiagonales(fila, columna) || verificarHorizontal(fila, columna) ||
-                verificarVertical(fila, columna)){
-            return true;
+        if (verificarDiagonales() || verificarHorizontal() || verificarVertical()){
+            return this.getTurno();
         }else {
-            return false;
+            return null;
         }
 
 
     }
 
-    public boolean verificarVertical(int fila,int columna){
+    public boolean verificarVertical(){
         for (int i = 0; i < 3; i++) {
             if (tablero[0][i] == tablero[1][i] && tablero[2][i] == tablero[0][i] && tablero[0][i] != ' ') {
                 return true;
@@ -58,7 +75,7 @@ public class TaTeTi {
         return false;
     }
 
-    public boolean verificarHorizontal(int fila,int columna){
+    public boolean verificarHorizontal(){
         for (int i = 0; i < 3; i++) {
             if (tablero[i][0] == tablero[i][1] && tablero[i][2] == tablero[0][i] && tablero[0][i] != ' ') {
                 return true;
@@ -67,7 +84,7 @@ public class TaTeTi {
         return false;
     }
 
-    public boolean verificarDiagonales(int fila,int columna){
+    public boolean verificarDiagonales(){
         //verificamos diagonal izq
         if (tablero[0][0] == tablero[1][1] && tablero[2][2] == tablero[0][0] && tablero[0][0] != ' ') {
             return true;

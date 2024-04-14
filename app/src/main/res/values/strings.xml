@@ -3,4 +3,6 @@
     <string name="opcion_jugador">Elige jugar con:</string>
     <string name="circulo">Circulo (O)</string>
     <string name="cruz">Cruz (X)</string>
+    <string name="edit_text">Ingrese su nombre</string>
+    <string name="comenzar">Jugar!</string>
 </resources>
