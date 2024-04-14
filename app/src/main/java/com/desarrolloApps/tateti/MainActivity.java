@@ -1,15 +1,12 @@
 package com.desarrolloApps.tateti;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,11 +17,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
         setContentView(R.layout.activity_main);
 
         nombre = findViewById(R.id.inputNombre);
@@ -59,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 aux.putExtra("nombre", nombreJugador);
                 if (circulos.isChecked()) {
-                    aux.putExtra("eleccion", "circulos");
-                }
-                else {
-                    aux.putExtra("eleccion", "cruces");
+                    aux.putExtra("eleccion", "O");
+                } else {
+                    aux.putExtra("eleccion", "X");
                 }
                 startActivity(aux);
             }

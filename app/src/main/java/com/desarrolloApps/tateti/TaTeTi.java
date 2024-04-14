@@ -1,83 +1,93 @@
 package com.desarrolloApps.tateti;
 
+import android.util.Log;
+
 public class TaTeTi {
-    private final Character[][] tablero = new Character[3][3];
-    private char turno;
+    private final String[][] tablero = new String[3][3];
+    private String turno;
+    private int contadorMovimientos;
 
     //Constructor
-
-
-    public TaTeTi() {
+    public TaTeTi(String eleccionJugador) {
+        turno = eleccionJugador;
+        contadorMovimientos = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                tablero[i][j] = ' ';
+                tablero[i][j] = " ";
             }
         }
     }
 
     //Getter y Setter
-    public char getCasillero(int fila, int columna){
+    public String getCasillero(int fila, int columna){
         return this.tablero[fila][columna];
     }
 
-    public char getTurno(){
+    public String getTurno(){
         return this.turno;
     }
 
-    public void marcarCasillero(int fila, int columna, char turnoActual){
-        //marcar una posicion del tabelro
-        this.tablero[fila][columna] = turnoActual;
-        cambiarTurno();
-    }
+    public int getContadorMovimientos() { return this.contadorMovimientos; }
 
     //Metodos de la clase
+    public void marcarCasillero(int posicion){
+        // parseamos la posicion a coordenadas de la matriz
+        int fila = ((posicion-1) / 3);
+        int columna = (posicion-1) % 3;
+
+        //marcar una posicion del tablero
+        this.tablero[fila][columna] = turno;
+        this.contadorMovimientos++;
+    }
 
     public void cambiarTurno(){
-
-        if (this.turno == 'X') {
-            this.turno = 'O';
-        }else if (this.turno == 'O'){
-            this.turno = 'X';
+        if (this.turno.equals("X")) {
+            this.turno = "O";
+        }
+        else if (this.turno.equals("O")) {
+            this.turno = "X";
         }
     }
 
-    public void  moverComputadora(){
+    public int moverComputadora(){
+        while (true) {
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (getCasillero(i,j) != ' '){
-                    marcarCasillero(i,j,turno);
-                }
+            int posicion = (int) (1 + Math.random() * 9);
+            Log.i("POSICION COMPUTADORA", String.valueOf(posicion));
+            int fila = ((posicion-1) / 3);
+            int columna = (posicion-1) % 3;
+
+            if (this.tablero[fila][columna].equals(" ")) {
+                marcarCasillero(posicion);
+                return posicion;
             }
         }
     }
 
-    //Este metodo va a llamar a los 3 metodos que verifican horizontal, vertical y diagonal
-    public Character chequearGanador(){
+    //Este metodo va a llamar a los 3 metodos que verifican filas, columnas y diagonales
+    public boolean hayGanador(){
 
         //Si alguno da true este metodo devuelve true. Si no false
-
-        if (verificarDiagonales() || verificarHorizontal() || verificarVertical()){
-            return this.getTurno();
+        if (verificarDiagonales() || verificarFilas() || verificarColumnas()){
+            return true;
         }else {
-            return null;
+            return false;
         }
-
 
     }
 
-    public boolean verificarVertical(){
+    public boolean verificarColumnas(){
         for (int i = 0; i < 3; i++) {
-            if (tablero[0][i] == tablero[1][i] && tablero[2][i] == tablero[0][i] && tablero[0][i] != ' ') {
+            if (tablero[0][i].equals(tablero[1][i]) && tablero[0][i].equals(tablero[2][i]) && !tablero[0][i].equals(" ")) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean verificarHorizontal(){
+    public boolean verificarFilas(){
         for (int i = 0; i < 3; i++) {
-            if (tablero[i][0] == tablero[i][1] && tablero[i][2] == tablero[0][i] && tablero[0][i] != ' ') {
+            if (tablero[i][0].equals(tablero[i][1]) && tablero[i][0].equals(tablero[i][2]) && !tablero[i][0].equals(" ")) {
                 return true;
             }
         }
@@ -86,12 +96,12 @@ public class TaTeTi {
 
     public boolean verificarDiagonales(){
         //verificamos diagonal izq
-        if (tablero[0][0] == tablero[1][1] && tablero[2][2] == tablero[0][0] && tablero[0][0] != ' ') {
+        if (tablero[0][0].equals(tablero[1][1]) && tablero[0][0].equals(tablero[2][2]) && !tablero[1][1].equals(" ")) {
             return true;
         }
 
         //verificamos diagonal derecha
-        if (tablero[0][2] == tablero[1][1] && tablero[2][0] == tablero[0][2] && tablero[0][2] != ' ') {
+        if (tablero[0][2].equals(tablero[1][1]) && tablero[0][2].equals(tablero[2][0]) && !tablero[1][1].equals(" ")) {
             return true;
         }
         return false;

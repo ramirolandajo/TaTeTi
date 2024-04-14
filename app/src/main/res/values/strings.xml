@@ -5,4 +5,9 @@
     <string name="cruz">Cruz (X)</string>
     <string name="edit_text">Ingrese su nombre</string>
     <string name="comenzar">Jugar!</string>
+    <string name="welcome_message">%1$s has elegido jugar con: %2$s</string>
+    <string name="turn">Es tu turno!</string>
+    <string name="empate">Ha habido un empate!</string>
+    <string name="ganador">Han ganado: %1$s</string>
+
 </resources>
