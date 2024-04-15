@@ -4,12 +4,10 @@ import android.util.Log;
 
 public class TaTeTi {
     private final String[][] tablero = new String[3][3];
-    private String turno;
     private int contadorMovimientos;
 
     //Constructor
     public TaTeTi(String eleccionJugador) {
-        turno = eleccionJugador;
         contadorMovimientos = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -23,14 +21,10 @@ public class TaTeTi {
         return this.tablero[fila][columna];
     }
 
-    public String getTurno(){
-        return this.turno;
-    }
-
     public int getContadorMovimientos() { return this.contadorMovimientos; }
 
     //Metodos de la clase
-    public void marcarCasillero(int posicion){
+    public void marcarCasillero(int posicion, String turno){
         // parseamos la posicion a coordenadas de la matriz
         int fila = ((posicion-1) / 3);
         int columna = (posicion-1) % 3;
@@ -40,25 +34,14 @@ public class TaTeTi {
         this.contadorMovimientos++;
     }
 
-    public void cambiarTurno(){
-        if (this.turno.equals("X")) {
-            this.turno = "O";
-        }
-        else if (this.turno.equals("O")) {
-            this.turno = "X";
-        }
-    }
-
-    public int moverComputadora(){
+    public int moverComputadora(String turno){
         while (true) {
-
             int posicion = (int) (1 + Math.random() * 9);
-            Log.i("POSICION COMPUTADORA", String.valueOf(posicion));
             int fila = ((posicion-1) / 3);
             int columna = (posicion-1) % 3;
 
             if (this.tablero[fila][columna].equals(" ")) {
-                marcarCasillero(posicion);
+                marcarCasillero(posicion, turno);
                 return posicion;
             }
         }

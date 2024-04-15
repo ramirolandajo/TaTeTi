@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class GameActivity extends AppCompatActivity {
 
-    String nombreJugador, eleccionJugador;
+    String nombreJugador, eleccionJugador, turno;
 
-    TextView playerName, mensajeTurnoView, mensajeGanador;
+    TextView playerName, mensajeGanador;
 
     TaTeTi controlJuego;
 
@@ -31,6 +31,7 @@ public class GameActivity extends AppCompatActivity {
 
         controlJuego = new TaTeTi(eleccionJugador);
         turnoJugador = true;
+        turno = eleccionJugador;
 
         btn1 = findViewById(R.id.btn1);
         btn2 = findViewById(R.id.btn2);
@@ -100,72 +101,90 @@ public class GameActivity extends AppCompatActivity {
 
     private void seleccionarBoton(View v) {
         Button seleccionado = (Button) v;
-        seleccionado.setText(controlJuego.getTurno());
+        seleccionado.setText(turno);
         int posicion = Integer.parseInt((String) seleccionado.getTag());
         seleccionado.setEnabled(false);// Deshabilito el boton para que no se elija mas de una vez.
-        controlJuego.marcarCasillero(posicion);
-        controlJuego.cambiarTurno();
+        controlJuego.marcarCasillero(posicion, turno);
 
         mensajeGanador = findViewById(R.id.win_text);
         if (controlJuego.hayGanador()) {
-            mensajeGanador.setText(getString(R.string.ganador, controlJuego.getTurno()));
+            mensajeGanador.setText(getString(R.string.ganador, turno));
         } else if (controlJuego.getContadorMovimientos() == 9) {
             mensajeGanador.setText(getString(R.string.empate));
         } else {
-            int pos = controlJuego.moverComputadora();
-            controlJuego.cambiarTurno();
-            Log.i("GAME", String.valueOf(pos));
-            switch (pos) {
-                case 1: {
-                    btn1.setText(controlJuego.getTurno());
-                    btn1.setEnabled(false);
-                    break;
-                }
-                case 2: {
-                    btn2.setText(controlJuego.getTurno());
-                    btn2.setEnabled(false);
-                    break;
-                }
-                case 3: {
-                    btn3.setText(controlJuego.getTurno());
-                    btn3.setEnabled(false);
-                    break;
-                }
-                case 4: {
-                    btn4.setText(controlJuego.getTurno());
-                    btn4.setEnabled(false);
-                    break;
+            if (turno.equals("O")) {
+                turno = "X";
+                int pos = controlJuego.moverComputadora(turno);
+                actualizarBotonComputadora(pos);
+            }
+            else {
+                turno = "O";
+                int pos = controlJuego.moverComputadora(turno);
+                actualizarBotonComputadora(pos);
+            }
+        }
+    }
 
-                }
-                case 5: {
-                    btn5.setText(controlJuego.getTurno());
-                    btn5.setEnabled(false);
-                    break;
+    private void actualizarBotonComputadora(int pos) {
+        switch (pos) {
+            case 1: {
+                btn1.setText(this.turno);
+                btn1.setEnabled(false);
+                turnoJugador = true;
+                break;
+            }
+            case 2: {
+                btn2.setText(this.turno);
+                btn2.setEnabled(false);
+                turnoJugador = true;
+                break;
+            }
+            case 3: {
+                btn3.setText(this.turno);
+                btn3.setEnabled(false);
+                turnoJugador = true;
+                break;
+            }
+            case 4: {
+                btn4.setText(this.turno);
+                btn4.setEnabled(false);
+                turnoJugador = true;
+                break;
 
-                }
-                case 6: {
-                    btn6.setText(controlJuego.getTurno());
-                    btn6.setEnabled(false);
-                    break;
-                }
-                case 7: {
-                    btn7.setText(controlJuego.getTurno());
-                    btn7.setEnabled(false);
-                    break;
-                }
-                case 8: {
-                    btn8.setText(controlJuego.getTurno());
-                    btn8.setEnabled(false);
-                    break;
-                }
-                case 9: {
-                    btn9.setText(controlJuego.getTurno());
-                    btn9.setEnabled(false);
-                    break;
-                }
-                default: {
-                    throw new IllegalArgumentException("Posicion de computadora no valida");
-                }
+            }
+            case 5: {
+                btn5.setText(this.turno);
+                btn5.setEnabled(false);
+                turnoJugador = true;
+                break;
+
+            }
+            case 6: {
+                btn6.setText(this.turno);
+                btn6.setEnabled(false);
+                turnoJugador = true;
+                break;
+            }
+            case 7: {
+                btn7.setText(this.turno);
+                btn7.setEnabled(false);
+                turnoJugador = true;
+                break;
+            }
+            case 8: {
+                btn8.setText(this.turno);
+                btn8.setEnabled(false);
+                turnoJugador = true;
+                break;
+            }
+            case 9: {
+                btn9.setText(this.turno);
+                btn9.setEnabled(false);
+                turnoJugador = true;
+                break;
+            }
+            default: {
+                throw new IllegalArgumentException("Posicion de computadora no valida");
             }
         }
     }
