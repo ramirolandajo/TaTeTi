@@ -24,27 +24,38 @@ public class TaTeTi {
     public int getContadorMovimientos() { return this.contadorMovimientos; }
 
     //Metodos de la clase
-    public void marcarCasillero(int posicion, String turno){
+    public void marcarCasillero(int posicion, String marca){
         // parseamos la posicion a coordenadas de la matriz
         int fila = ((posicion-1) / 3);
         int columna = (posicion-1) % 3;
 
         //marcar una posicion del tablero
-        this.tablero[fila][columna] = turno;
+        this.tablero[fila][columna] = marca;
         this.contadorMovimientos++;
     }
 
-    public int moverComputadora(String turno){
-        while (true) {
-            int posicion = (int) (1 + Math.random() * 9);
-            int fila = ((posicion-1) / 3);
-            int columna = (posicion-1) % 3;
+    public int[] moverComputadora(String eleccionJugador){
+        int posicion = (int) (1 + Math.random() * 9);
+        int fila = ((posicion-1) / 3);
+        int columna = (posicion-1) % 3;
 
-            if (this.tablero[fila][columna].equals(" ")) {
-                marcarCasillero(posicion, turno);
-                return posicion;
-            }
+        while(!this.tablero[fila][columna].equals(" ")){
+            posicion = (int) (1 + Math.random() * 9);
+            fila = ((posicion-1) / 3);
+            columna = (posicion-1) % 3;
         }
+
+        int[] posiciones = new int[2];
+        posiciones[0] = fila;
+        posiciones[1] = columna;
+
+        if (eleccionJugador.equals("O")) {
+            marcarCasillero(posicion, "X");
+        }
+        else {
+            marcarCasillero(posicion, "O");
+        }
+        return posiciones;
     }
 
     //Este metodo va a llamar a los 3 metodos que verifican filas, columnas y diagonales
@@ -57,6 +68,22 @@ public class TaTeTi {
             return false;
         }
 
+    }
+
+    public boolean hayEmpate(){
+
+        //Si alguno da true este metodo devuelve true. Si no false
+        return !hayGanador() && contadorMovimientos == 9;
+
+    }
+
+    public void reiniciar() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                tablero[i][j] = " ";
+                contadorMovimientos = 0;
+            }
+        }
     }
 
     public boolean verificarColumnas(){

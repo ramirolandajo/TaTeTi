@@ -9,15 +9,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class GameActivity extends AppCompatActivity {
 
-    String nombreJugador, eleccionJugador, turno;
+    String nombreJugador, eleccionJugador;
 
     TextView playerName, mensajeGanador;
 
     TaTeTi controlJuego;
 
-    boolean turnoJugador;
-
-    Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9;
+    Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, reiniciar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +28,6 @@ public class GameActivity extends AppCompatActivity {
         playerName.setText(getString(R.string.welcome_message, nombreJugador, eleccionJugador));
 
         controlJuego = new TaTeTi(eleccionJugador);
-        turnoJugador = true;
-        turno = eleccionJugador;
 
         btn1 = findViewById(R.id.btn1);
         btn2 = findViewById(R.id.btn2);
@@ -43,148 +39,137 @@ public class GameActivity extends AppCompatActivity {
         btn8 = findViewById(R.id.btn8);
         btn9 = findViewById(R.id.btn9);
 
+        Button[][] matrizTateti = new Button[3][3];
+        matrizTateti[0][0] = btn1;
+        matrizTateti[0][1] = btn2;
+        matrizTateti[0][2] = btn3;
+        matrizTateti[1][0] = btn4;
+        matrizTateti[1][1] = btn5;
+        matrizTateti[1][2] = btn6;
+        matrizTateti[2][0] = btn7;
+        matrizTateti[2][1] = btn8;
+        matrizTateti[2][2] = btn9;
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seleccionarBoton(v);
+                seleccionarBoton(v,1, matrizTateti);
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seleccionarBoton(v);
+                seleccionarBoton(v,2, matrizTateti);
             }
         });
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seleccionarBoton(v);
+                seleccionarBoton(v,3, matrizTateti);
             }
         });
         btn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seleccionarBoton(v);
+                seleccionarBoton(v,4, matrizTateti);
             }
         });
         btn5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seleccionarBoton(v);
+                seleccionarBoton(v,5, matrizTateti);
             }
         });
         btn6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seleccionarBoton(v);
+                seleccionarBoton(v,6, matrizTateti);
             }
         });
         btn7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seleccionarBoton(v);
+                seleccionarBoton(v,7, matrizTateti);
             }
         });
         btn8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seleccionarBoton(v);
+                seleccionarBoton(v,8, matrizTateti);
             }
         });
         btn9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seleccionarBoton(v);
+                seleccionarBoton(v,9, matrizTateti);
+            }
+        });
+
+        reiniciar = findViewById(R.id.reset);
+        reiniciar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        matrizTateti[i][j].setText(" ");
+                        matrizTateti[i][j].setEnabled(true);
+                    }
+                }
+                mensajeGanador.setText("");
+                controlJuego.reiniciar();
             }
         });
     }
 
-    private void seleccionarBoton(View v) {
-        Button seleccionado = (Button) v;
-        seleccionado.setText(turno);
-        int posicion = Integer.parseInt((String) seleccionado.getTag());
-        seleccionado.setEnabled(false);// Deshabilito el boton para que no se elija mas de una vez.
-        controlJuego.marcarCasillero(posicion, turno);
-
+    private void seleccionarBoton(View v, int posicion, Button[][] matrizTateti) {
         mensajeGanador = findViewById(R.id.win_text);
+
+        Button seleccionado = (Button) v;
+        if (eleccionJugador.equals("O"))
+            seleccionado.setText("O");
+        else
+            seleccionado.setText("X");
+        seleccionado.setEnabled(false);
+        controlJuego.marcarCasillero(posicion, eleccionJugador);
+
         if (controlJuego.hayGanador()) {
-            mensajeGanador.setText(getString(R.string.ganador, turno));
-        } else if (controlJuego.getContadorMovimientos() == 9) {
+            mensajeGanador.setText(getString(R.string.ganador, nombreJugador));
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    matrizTateti[i][j].setEnabled(false);
+                }
+            }
+        } else if (controlJuego.hayEmpate()) {
             mensajeGanador.setText(getString(R.string.empate));
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    matrizTateti[i][j].setEnabled(false);
+                }
+            }
         } else {
-            if (turno.equals("O")) {
-                turno = "X";
-                int pos = controlJuego.moverComputadora(turno);
-                actualizarBotonComputadora(pos);
+            int[] posicionesComputadora = controlJuego.moverComputadora(eleccionJugador);
+            if (eleccionJugador.equals("O")) {
+                matrizTateti[posicionesComputadora[0]][posicionesComputadora[1]].setText("X");
+                matrizTateti[posicionesComputadora[0]][posicionesComputadora[1]].setEnabled(false);
             }
             else {
-                turno = "O";
-                int pos = controlJuego.moverComputadora(turno);
-                actualizarBotonComputadora(pos);
+                matrizTateti[posicionesComputadora[0]][posicionesComputadora[1]].setText("O");
+                matrizTateti[posicionesComputadora[0]][posicionesComputadora[1]].setEnabled(false);
             }
-        }
-    }
-
-    private void actualizarBotonComputadora(int pos) {
-        switch (pos) {
-            case 1: {
-                btn1.setText(this.turno);
-                btn1.setEnabled(false);
-                turnoJugador = true;
-                break;
+            if (controlJuego.hayGanador()) {
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        matrizTateti[i][j].setEnabled(false);
+                    }
+                }
+                mensajeGanador.setText(getString(R.string.ganador, "la IA"));
             }
-            case 2: {
-                btn2.setText(this.turno);
-                btn2.setEnabled(false);
-                turnoJugador = true;
-                break;
-            }
-            case 3: {
-                btn3.setText(this.turno);
-                btn3.setEnabled(false);
-                turnoJugador = true;
-                break;
-            }
-            case 4: {
-                btn4.setText(this.turno);
-                btn4.setEnabled(false);
-                turnoJugador = true;
-                break;
-
-            }
-            case 5: {
-                btn5.setText(this.turno);
-                btn5.setEnabled(false);
-                turnoJugador = true;
-                break;
-
-            }
-            case 6: {
-                btn6.setText(this.turno);
-                btn6.setEnabled(false);
-                turnoJugador = true;
-                break;
-            }
-            case 7: {
-                btn7.setText(this.turno);
-                btn7.setEnabled(false);
-                turnoJugador = true;
-                break;
-            }
-            case 8: {
-                btn8.setText(this.turno);
-                btn8.setEnabled(false);
-                turnoJugador = true;
-                break;
-            }
-            case 9: {
-                btn9.setText(this.turno);
-                btn9.setEnabled(false);
-                turnoJugador = true;
-                break;
-            }
-            default: {
-                throw new IllegalArgumentException("Posicion de computadora no valida");
+            else if (controlJuego.hayEmpate()) {
+                mensajeGanador.setText(getString(R.string.empate));
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        matrizTateti[i][j].setEnabled(false);
+                    }
+                }
             }
         }
     }
