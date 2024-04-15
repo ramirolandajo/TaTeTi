@@ -8,6 +8,6 @@
     <string name="welcome_message">%1$s has elegido jugar con: %2$s</string>
     <string name="turn">Es tu turno!</string>
     <string name="empate">Ha habido un empate!</string>
-    <string name="ganador">Han ganado: %1$s</string>
+    <string name="ganador">El ganador es… %1$s</string>
 
 </resources>
